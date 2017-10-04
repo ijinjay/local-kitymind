@@ -2,6 +2,7 @@
 	var oldData='';
 	var km_fname = '';
 	var html = '';
+	var win_title = '';
 	html += '<a class="diy export" data-type="json">导出json</a>',
 	html += '<a class="diy export" data-type="md">导出md</a>',
 	html += '<a class="diy export" data-type="km">导出km</a>',
@@ -96,6 +97,10 @@
 
 	window.setInterval(
 		function(){
+			if (win_title != $('#node_text1').text()) {
+				win_title = $('#node_text1').text();
+				document.title = win_title;
+			}
 			if (oldData == '') {
 				oldData = editor.minder.exportJson();
 				return;
