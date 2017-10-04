@@ -156,9 +156,13 @@
 			reader.onload = function(e) {
 				var content = reader.result;
 				editor.minder.importData(fileType, content).then(function(data){
-					console.log(data)
+					console.log(data);
 					$(fileInput).val('');
-					oldData = editor.minder.exportJson();                    
+					oldData = editor.minder.exportJson();
+					if (win_title != $('#node_text1').text()) {
+						win_title = $('#node_text1').text();
+						document.title = win_title;
+					}                    
 				});
 			}
 			reader.readAsText(file);
