@@ -13,6 +13,10 @@ function convertUrlQuery($query)
   return $params;
 }
 
+function get_basename($filename){  
+     return preg_replace('/^.+[\\\\\\/]/', '', $filename);  
+}
+
 function read_all_dir($dir, $fname)
 {
     $result = '';
@@ -23,7 +27,7 @@ function read_all_dir($dir, $fname)
                 $file = iconv("gb2312", "utf-8", $file);                 
                 $cur_path = $dir . DIRECTORY_SEPARATOR . $file;
                 // TODO: 文件名中有副本 - xx.km不能匹配
-                if (basename($file)==$fname) {
+                if (get_basename($file)==$fname) {
                     //echo "\nmatch " . $fname . " " . $cur_path . "\n";
                     $result = $cur_path;
                     break;
@@ -73,6 +77,7 @@ $ans=json_decode($url);
 //echo $ans
 //$content = file_get_contents($url);
 //echo $content;
+$target = iconv("utf-8", "gb2312", $target);
 $myfile = fopen($target, "wb");
 fwrite($myfile, $ans);
 fclose($myfile);
