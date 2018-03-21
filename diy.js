@@ -7,8 +7,11 @@
 	html += '<a class="diy export" data-type="png" id="png_export">导出png</a>',
 	html += '<a class="diy export" data-type="md" id="md_export">导出md</a>',
 	html += '<a class="diy export" data-type="km" id="km_export">导出km</a>',
+	html += '<button class="diy input" id="import_net_data">',
+	html += '导入网络数据',
+	html += '</button>',
 	html += '<button class="diy input">',
-	html += '导入<input type="file" id="fileInput">',
+	html += '导入文件<input type="file" id="fileInput">',
 	html += '</button>',
 	// html += '<textarea class="diy input" id="prompt_txt">',
 	// html +='</textarea>';    
@@ -83,6 +86,26 @@
 			aLink.download = $('#node_text1').text()+'.km';
 		});
 
+	});
+
+	// 导入网络数据
+	$(document).on("click", '#import_net_data', function(event){
+		event.preventDefault();
+		$.ajax({
+            url: "file:///Users/jay/Code/local-kitymind/test_data.json",
+            type: 'GET',
+            dataType: 'txt',
+            success: function (data) {
+                var status = data.status;
+                if (status == 100) {
+                    alert(data.msg);
+                    return;
+                }
+            },
+            error: function (error) {
+                alert('error');
+            }
+        });
 	});
 
   // 不上传
