@@ -3,6 +3,7 @@
 	var km_fname = '';
 	var html = '';
 	var win_title = '';
+	var current_select_node = '';
 	html += '<a class="diy export" data-type="json" id="json_export">导出json</a>',
 	html += '<a class="diy export" data-type="png" id="png_export">导出png</a>',
 	html += '<a class="diy export" data-type="md" id="md_export">导出md</a>',
@@ -13,8 +14,8 @@
 	html += '<button class="diy input">',
 	html += '导入文件<input type="file" id="fileInput">',
 	html += '</button>',
-	// html += '<textarea class="diy input" id="prompt_txt">',
-	// html +='</textarea>';    
+	html += '<textarea class="diy input" id="prompt_txt" placeholder="请输入网络数据地址">',
+	html +='</textarea>';    
 
 	$('.editor-title').append(html); // 添加按钮
 
@@ -91,58 +92,34 @@
 	// 导入网络数据
 	$(document).on("click", '#import_net_data', function(event){
 		event.preventDefault();
+		var input_url = document.getElementById('prompt_txt');
+		var net_url = "https://raw.githubusercontent.com/jinjaysnow/local-kitymind/master/test_data.json";
+		if (input_url.value ) {
+			net_url = input_url.value;
+		}
 		$.ajax({
-            url: "file:///Users/jay/Code/local-kitymind/test_data.json",
-            type: 'GET',
-            dataType: 'txt',
+            url: net_url,
             success: function (data) {
-                var status = data.status;
-                if (status == 100) {
-                    alert(data.msg);
-                    return;
-                }
+            	if (current_select_node) {
+            		editor.minder.Text2Children(current_select_node, data);
+            	}
             },
             error: function (error) {
-                alert('error');
+                alert('网络数据错误');
             }
         });
 	});
 
-  // 不上传
-	// window.setInterval(
-	// 	function(){
-	// 		if (win_title != $('#node_text1').text()) {
-	// 			win_title = $('#node_text1').text();
-	// 			document.title = win_title;
-	// 		}
-	// 		if (oldData == '') {
-	// 			oldData = editor.minder.exportJson();
-	// 			return;
-	// 		}            
-	// 		if(JSON.stringify(oldData) == JSON.stringify(editor.minder.exportJson())){
-	// 			return;
-	// 		}else{
-	// 			oldData = editor.minder.exportJson();
-	// 		}
-	// 		exportType='json';
-	// 		editor.minder.exportData(exportType).then(function(content){                               
-	// 			$.ajax({
-	// 				type: "POST",  
-	// 				url: "upload.php?fname="+encodeURI(km_fname)+"&text="+$('#node_text1').text(), 
-	// 				data: JSON.stringify(content),
-	// 				success: function(msg){
-	// 				//alert( "Data Saved: " + msg ); 
-	// 		myDate = new Date();
-	// 		txt=document.getElementById('prompt_txt');
-	// 		txt.value = myDate.getHours() + ":" + myDate.getMinutes() + ":" + myDate.getSeconds() + " : " + msg;
-	// 				}
-	// 			});               
-	// 		});
-	//         }, 
-  //       5000);
-
 	// 导入
 	window.onload = function() {
+	  // 确定选择的节点
+	  editor.minder.on('selectionchange', function() {
+			current_select_node = minder.getSelectedNode();
+			if (current_select_node) {
+				console.log('You selected: "%s"', current_select_node.getText());
+			}
+		});
+
 		var fileInput = document.getElementById('fileInput');
         
         $("#kity_svg_6").css("background-color", '#cbe8cf');
