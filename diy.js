@@ -94,7 +94,7 @@
 		event.preventDefault();
 		var input_url = document.getElementById('prompt_txt');
 		var net_url = "https://raw.githubusercontent.com/jinjaysnow/local-kitymind/master/test_data.json";
-		if (input_url.value ) {
+		if (input_url.value) {
 			net_url = input_url.value;
 		}
 		$.ajax({
@@ -113,12 +113,29 @@
 	// 导入
 	window.onload = function() {
 	  // 确定选择的节点
+	  var first = true;
 	  editor.minder.on('selectionchange', function() {
 			current_select_node = minder.getSelectedNode();
 			if (current_select_node) {
 				console.log('You selected: "%s"', current_select_node.getText());
 			}
+			if(first){
+				$.ajax({
+		        url: "https://raw.githubusercontent.com/jinjaysnow/local-kitymind/master/test_data.json",
+		        success: function (data) {
+		        	if (current_select_node) {
+		        		console.log(data);
+		        		editor.minder.Text2Children(current_select_node, data);
+		        	}
+		        },
+		        error: function (error) {
+		            alert('网络数据错误');
+		        }
+		    });
+		    first = false;
+			}
 		});
+
 
 		var fileInput = document.getElementById('fileInput');
         
